@@ -1,12 +1,43 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 )
 
+func random(array []string) string {
+	clear()
+	print("how long password should be?\n>")
+	buff := bufio.NewScanner(os.Stdin)
+	var length int
+	for {
+		_, err := fmt.Scanln(&length)
+		if err != nil {
+			print("write a number...\n>")
+			buff.Scan()
+			continue
+		}
+		break
+	}
+	var arrayToOutput []string
+	for i := 0; i < length; i++ {
+		for {
+			rngNum := rand.Intn(len(array))
+			if array[rngNum] == "" {
+				continue
+			}
+			arrayToOutput = append(arrayToOutput, array[rngNum])
+			break
+		}
+	}
+	outputString := strings.Join(arrayToOutput, "")
+	return outputString
+}
 func clear() {
 	switch runtime.GOOS { //runtime.GOOS returns OS
 	case "windows":
@@ -61,6 +92,7 @@ func board() []string {
 		if err != nil {
 			continue
 		}
+		usrInput = strings.ToUpper(usrInput)
 		switch usrInput {
 		case "UCL":
 			if uclIsSelected == greenV {
@@ -88,7 +120,7 @@ func board() []string {
 				clear()
 				continue
 			}
-			for _, v := range numbersArray {
+			for _, v := range specialSignsArray {
 				everythingArray = append(everythingArray, v)
 				ssIsSelected = greenV
 			}
@@ -98,17 +130,17 @@ func board() []string {
 				clear()
 				continue
 			}
-			for _, v := range specialSignsArray {
+			for _, v := range numbersArray {
 				everythingArray = append(everythingArray, v)
 				nbIsSelected = greenV
 			}
-		case "reset":
+		case "RESET":
 			everythingArray = everythingArray[:0] //resets array
 			uclIsSelected = redX
 			lclIsSelected = redX
 			ssIsSelected = redX
 			nbIsSelected = redX
-		case "next":
+		case "NEXT":
 			return everythingArray
 		default:
 			message = red + "wrong input" + reset
@@ -122,8 +154,9 @@ func main() {
 	fmt.Println("welcome to password generator, please \nselect from what password will be generated")
 	fmt.Println("if added something you don't want, you can reset by typing \"reset\"")
 	fmt.Println("if you want to go to next step type \"confirm\"")
-	x := board()
-	for _, v := range x {
-		fmt.Printf("%v, ", v)
-	}
+	passwordSigns := board()
+
+	password := random(passwordSigns)
+	println("your password: ", password)
+	fmt.Scanln()
 }
