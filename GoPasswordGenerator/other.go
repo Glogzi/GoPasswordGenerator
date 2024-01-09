@@ -10,12 +10,10 @@ import (
 	"strings"
 )
 
-func strToArray(strToConvert string) [30]string {
-	var OutputArray [30]string
-	for i, v := range strToConvert {
-		if string(v) != "" {
-			OutputArray[i] = string(v)
-		}
+func strToArray(strToConvert string) []string {
+	var OutputArray []string
+	for _, v := range strToConvert {
+		OutputArray = append(OutputArray, string(v))
 	}
 	return OutputArray
 }
@@ -38,9 +36,6 @@ func random(array []string) string {
 	for i := 0; i < length; i++ {
 		for {
 			rngNum := rand.Intn(len(array))
-			if array[rngNum] == "" {
-				continue
-			}
 			arrayToOutput = append(arrayToOutput, array[rngNum])
 			break
 		}
