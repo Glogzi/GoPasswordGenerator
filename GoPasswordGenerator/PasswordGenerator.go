@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"reflect"
 	"runtime"
 	"strings"
 )
@@ -79,6 +80,7 @@ func board() []string {
 	specialSignsArray := strToArray(specialSigns)
 	numbersArray := strToArray(numbers)
 	var everythingArray []string
+	var checkArray []string
 	message := ""
 	for {
 		fmt.Println(message)
@@ -140,8 +142,11 @@ func board() []string {
 			lclIsSelected = redX
 			ssIsSelected = redX
 			nbIsSelected = redX
-		case "NEXT":
-			return everythingArray
+		case "CONFIRM":
+			if !reflect.DeepEqual(everythingArray, checkArray) {
+				return everythingArray
+			}
+			message = red + "I need something to generate password..." + reset
 		default:
 			message = red + "wrong input" + reset
 		}
