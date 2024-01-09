@@ -2,9 +2,24 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
+	"runtime"
 )
 
+func clear() {
+	switch runtime.GOOS { //runtime.GOOS returns OS
+	case "windows":
+		command := exec.Command("cmd", "/c", "cls")
+		command.Stdout = os.Stdout
+		command.Run()
+	case "linux":
+		command := exec.Command("clear")
+		command.Stdout = os.Stdout
+		command.Run()
+	}
+
+}
 func strToArray(strToConvert string) [28]string {
 	var OutputArray [28]string
 	for i, v := range strToConvert {
@@ -15,10 +30,15 @@ func strToArray(strToConvert string) [28]string {
 	return OutputArray
 }
 func board() []string {
-	var uclIsSelected = "X"
-	var lclIsSelected = "X"
-	var ssIsSelected = "X"
-	var nbIsSelected = "X"
+	red := "\033[1;31m"
+	reset := "\033[1;39m"
+	green := "\033[1;32m"
+	redX := red + "X" + reset
+	greenV := green + "V" + reset
+	uclIsSelected := redX
+	lclIsSelected := redX
+	ssIsSelected := redX
+	nbIsSelected := redX
 	uppercaseLetters := "QWERTYUIOPASDFGHJKLZXCVBNM"
 	lowercaseLetters := "qwertyuiopasdfghjklzxcvbnm"
 	specialSigns := "!@#$%^&*()-=[];',./<>?:{}\\|\""
@@ -28,7 +48,9 @@ func board() []string {
 	specialSignsArray := strToArray(specialSigns)
 	numbersArray := strToArray(numbers)
 	var everythingArray []string
+	message := ""
 	for {
+		fmt.Println(message)
 		fmt.Printf("%v UCL - uppercase letters\n"+
 			"%v LCL - lower case letters\n"+
 			"%v SS - special signs\n"+
@@ -41,58 +63,58 @@ func board() []string {
 		}
 		switch usrInput {
 		case "UCL":
-			if uclIsSelected == "V" {
-				exec.Command("cls || clear")
-				println("already selected")
+			if uclIsSelected == greenV {
+				message = red + "already selected" + reset
+				clear()
 				continue
 			}
 			for _, v := range uppercaseLettersArray {
 				everythingArray = append(everythingArray, v)
-				uclIsSelected = "V"
+				uclIsSelected = greenV
 			}
 		case "LCL":
-			if lclIsSelected == "V" {
-				exec.Command("cls || clear")
-				println("already selected")
+			if lclIsSelected == greenV {
+				message = red + "already selected" + reset
+				clear()
 				continue
 			}
 			for _, v := range lowercaseLettersArray {
 				everythingArray = append(everythingArray, v)
-				lclIsSelected = "V"
+				lclIsSelected = greenV
 			}
 		case "SS":
-			if ssIsSelected == "V" {
-				exec.Command("cls || clear")
-				println("already selected")
+			if ssIsSelected == greenV {
+				message = red + "already selected" + reset
+				clear()
 				continue
 			}
 			for _, v := range numbersArray {
 				everythingArray = append(everythingArray, v)
-				ssIsSelected = "V"
+				ssIsSelected = greenV
 			}
 		case "NB":
-			if nbIsSelected == "V" {
-				exec.Command("cls || clear")
-				println("already selected")
+			if nbIsSelected == greenV {
+				message = red + "already selected" + reset
+				clear()
 				continue
 			}
 			for _, v := range specialSignsArray {
 				everythingArray = append(everythingArray, v)
-				nbIsSelected = "V"
+				nbIsSelected = greenV
 			}
 		case "reset":
-			everythingArray = everythingArray[:0]
-			uclIsSelected = "X"
-			lclIsSelected = "X"
-			ssIsSelected = "X"
-			nbIsSelected = "X"
+			everythingArray = everythingArray[:0] //resets array
+			uclIsSelected = redX
+			lclIsSelected = redX
+			ssIsSelected = redX
+			nbIsSelected = redX
 		case "next":
 			return everythingArray
 		default:
-			println("wrong input!!!")
+			message = red + "wrong input" + reset
 		}
 		//the end of switch
-		exec.Command("cls || clear")
+		clear()
 	}
 
 }
